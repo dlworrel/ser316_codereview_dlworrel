@@ -4,6 +4,7 @@ public class Checking extends Account {
 
 	private static final long serialVersionUID = 11L;
 	private int numWithdraws = 0;
+	private int withdrawLimit = 10;
 	
 	private Checking(String name) {
 		super(name);
@@ -33,16 +34,16 @@ public class Checking extends Account {
 	}
 
 	/**
-	 * Withdrawal. After 10 withdrawals a fee of $2 is charged per transaction You may 
+	 * Withdrawal. After withdrawLimit (10) withdrawals a fee of $2 is charged per transaction You may 
 	 * continue to withdraw an overdrawn account until the balance is below -$100
 	 */
 	public boolean withdraw(float amount) {
 		if (amount > 0.0f) {		
-			// KG: incorrect, last balance check should be >=
+			// KG: incorrect, last balance check should be >= 
 			if (getState() == State.OPEN || (getState() == State.OVERDRAWN && balance > -100.0f)) {
 				balance = balance - amount;
 				numWithdraws++;
-				if (numWithdraws > 10)
+				if (numWithdraws > withdrawLimit)
 					balance = balance - 2.0f;
 				if (balance < 0.0f) {
 					setState(State.OVERDRAWN);
